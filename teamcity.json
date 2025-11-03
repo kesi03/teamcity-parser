@@ -1,0 +1,220 @@
+{
+  "version": "2025.03",
+  "project": {
+    "description": "Mockholm Organisation",
+    "buildTypes": [
+      {
+        "id": "Dotenv",
+        "name": "dotenv",
+        "steps": [
+          {
+            "type": "script"
+          },
+          {
+            "type": "python",
+            "name": "pythonRunner",
+            "id": "pythonRunner"
+          },
+          {
+            "type": "kotlinScript",
+            "name": "kotlinIsKing",
+            "id": "kotlinIsKing"
+          }
+        ],
+        "params": {
+          "env.TESTER": "Donald",
+          "blues": "rock"
+        },
+        "artifactRules": "output.env\n        .env"
+      },
+      {
+        "id": "Executer",
+        "name": "Executer",
+        "steps": [
+          {
+            "type": "script",
+            "id": "simpleRunner"
+          },
+          {
+            "type": "script",
+            "name": "caller",
+            "id": "caller"
+          }
+        ],
+        "params": {
+          "env.Echo_ID": "Mockholm_Build",
+          "env.TeamCitySchema": "http"
+        },
+        "vcs": {
+          "root": "HttpsGithubComKesi03cityClickersRefsHeadsMain"
+        }
+      },
+      {
+        "id": "Tc001",
+        "name": "TC001",
+        "steps": [
+          {
+            "type": "script",
+            "name": "hello",
+            "id": "hello"
+          }
+        ],
+        "triggers": [],
+        "features": [],
+        "vcs": {}
+      },
+      {
+        "id": "Tc002",
+        "name": "TC002",
+        "steps": [
+          {
+            "type": "script",
+            "name": "hello",
+            "id": "hello"
+          }
+        ],
+        "triggers": [],
+        "features": [],
+        "vcs": {}
+      },
+      {
+        "id": "Caller",
+        "name": "Caller",
+        "steps": [
+          {
+            "type": "script",
+            "id": "simpleRunner"
+          },
+          {
+            "type": "script",
+            "name": "caller",
+            "id": "caller"
+          },
+          {
+            "type": "kotlinScript",
+            "id": "kotlinScript"
+          }
+        ],
+        "params": {
+          "env.Echo_ID": "Mockholm_Build",
+          "env.TeamCitySchema": "http"
+        },
+        "vcs": {
+          "root": "HttpsGithubComKesi03cityClickersRefsHeadsMain"
+        }
+      },
+      {
+        "id": "Build_1",
+        "name": "Build",
+        "steps": [
+          {
+            "type": "script",
+            "name": "hello",
+            "id": "hello"
+          }
+        ],
+        "triggers": [],
+        "features": [],
+        "vcs": {}
+      }
+    ],
+    "subProjects": [
+      {
+        "id": "Jobs",
+        "name": "jobs",
+        "buildTypes": [
+          {
+            "id": "Jobs_Step2"
+          },
+          {
+            "id": "Jobs_Step31"
+          },
+          {
+            "id": "Jobs_Step21"
+          },
+          {
+            "id": "Jobs_Step3"
+          },
+          {
+            "id": "Jobs_Step1"
+          },
+          {
+            "id": "Jobs_Step4"
+          }
+        ]
+      },
+      {
+        "id": "Versionify",
+        "name": "versionify"
+      },
+      {
+        "id": "Build",
+        "name": "build",
+        "buildTypes": [
+          {
+            "id": "Build_PackgeApp1"
+          },
+          {
+            "id": "Build_PackgeApp2"
+          },
+          {
+            "id": "Build_Assembly"
+          },
+          {
+            "id": "Build_ResultGlobal"
+          },
+          {
+            "id": "Build_ResultAssembly"
+          },
+          {
+            "id": "Build_GlobalCommon"
+          },
+          {
+            "id": "Build_AssemblyApp1"
+          },
+          {
+            "id": "Build_ResultPackage"
+          },
+          {
+            "id": "Build_Packages"
+          },
+          {
+            "id": "Build_Global"
+          },
+          {
+            "id": "Build_GlobalOther"
+          }
+        ]
+      },
+      {
+        "id": "Mutatio",
+        "name": "mutatio",
+        "buildTypes": [
+          {
+            "id": "Mutatio_MutatioPluginTest"
+          },
+          {
+            "id": "Mutatio_Build"
+          },
+          {
+            "id": "Mutatio_CreateBranch"
+          }
+        ]
+      }
+    ],
+    "vcsRoots": [
+      {
+        "id": "HttpsGithubComKesi03cityClickersRefsHeadsMain",
+        "name": "https://github.com/kesi03/city-clickers#refs/heads/main",
+        "url": "https://github.com/kesi03/city-clickers",
+        "branch": "refs/heads/main"
+      },
+      {
+        "id": "HttpsGithubComKesi03cityClickersRefsHeadsMain1",
+        "name": "https://github.com/kesi03/city-clickers#refs/heads/main (1)",
+        "url": "https://github.com/kesi03/city-clickers",
+        "branch": "refs/heads/main"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1366 @@
+project:
+  buildTypes:
+  - artifactRules: "output.env\n        .env"
+    id: Dotenv
+    name: dotenv
+    params:
+    - name: env.TESTER
+      type: param
+      value: Donald
+    - name: blues
+      type: param
+      value: rock
+    steps:
+    - type: script
+    - id: pythonRunner
+      name: pythonRunner
+      type: python
+    - enabled: false
+      id: kotlinIsKing
+      name: kotlinIsKing
+      type: kotlinScript
+    - enabled: false
+      executionMode: DEFAULT
+      id: setEnvironment
+      name: setEnvironment
+      type: tc:recipe:jetbrains/set-environment-variable@1.0.0
+  - id: Executer
+    name: Executer
+    params:
+    - name: env.Echo_ID
+      type: param
+      value: Mockholm_Build
+    - name: env.TeamCitySchema
+      type: param
+      value: http
+    - name: env.RELEASE_REPO_NAME
+      type: select
+      value: repo1
+    - name: env.RELEASE_VERSION_TYPE
+      type: select
+      value: PATCH
+    - name: env.IS_ERROR
+      type: select
+      value: 'FALSE'
+    steps:
+    - enabled: false
+      id: simpleRunner
+      scriptContent: "echo \"userId: %system.teamcity.auth.userId%\"\n           \
+        \     echo \"url: %teamcity.serverUrl%/app/rest/buildQueue\"\n           \
+        \     curl -u \"%system.teamcity.auth.userId%:%system.teamcity.auth.password%\"\
+        \ -X POST \\\n                \"%teamcity.serverUrl%/app/rest/buildQueue\"\
+        \ \\\n                -H \"Content-Type: application/json\" \\\n         \
+        \       -d '{\n                  \"buildType\": {\n                    \"\
+        id\": \"%env.Echo_ID%\"\n                  },\n                  \"properties\"\
+        : {\n                    \"property\": [\n                      {\n      \
+        \                  \"name\": \"env.RELEASE_VERSION_TYPE\",\n             \
+        \           \"value\": \"%env.RELEASE_VERSION_TYPE%\"\n                  \
+        \    },\n                      {\n                        \"name\": \"env.RELEASE_REPO_NAME\"\
+        ,\n                        \"value\": \"%env.RELEASE_REPO_NAME%\"\n      \
+        \                },\n                      {\n                        \"name\"\
+        : \"env.IS_ERROR\",\n                        \"value\": \"%env.IS_ERROR%\"\
+        \n                      }\n                    ]\n                  }}'"
+      type: script
+    - id: caller
+      name: caller
+      scriptContent: "#!/bin/bash\n                echo \"%env.HOSTTYPE%\"\n     \
+        \           echo \"OS Name: %system.OS%\"\n                echo \"OS Version:\
+        \ %system.OS.Version%\"\n                echo \"Architecture: %system.OS.Architecture%\"\
+        \n                source /root/.nvm/nvm.sh\n                pnpm install\n\
+        \                pnpm execute-configuration --url \"%teamcity.serverUrl%\"\
+        \ --userId \"%system.teamcity.auth.userId%\" --password \"%system.teamcity.auth.password%\"\
+        \ --buildTypeId \"%env.Echo_ID%\" --properties \"RELEASE_VERSION_TYPE\"=\"\
+        %env.RELEASE_VERSION_TYPE%\" \"RELEASE_REPO_NAME\"=\"%env.RELEASE_REPO_NAME%\"\
+        \ \"IS_ERROR\"=\"%env.IS_ERROR%\" --config \"examples/release-test.yaml\""
+      type: script
+      workingDir: apps/node-client
+    vcs:
+      root: HttpsGithubComKesi03cityClickersRefsHeadsMain
+  - features: []
+    id: Tc001
+    name: TC001
+    steps:
+    - id: hello
+      name: hello
+      scriptContent: "echo \"Build called\"\n                echo \"RELEASE_REPO_NAME:\
+        \ %RELEASE_REPO_NAME%\"\n                echo \"RELEASE_VERSION_TYPE: %RELEASE_VERSION_TYPE%\"\
+        \n                \n                if [ \"%IS_ERROR%\" == \"TRUE\" ]; then\n\
+        \                    echo \"IS_ERROR is TRUE, exiting with error code.\"\n\
+        \                    exit 1\n                fi"
+      type: script
+    triggers: []
+    vcs: {}
+  - features: []
+    id: Tc002
+    name: TC002
+    steps:
+    - id: hello
+      name: hello
+      scriptContent: "echo \"Build called\"\n                echo \"RELEASE_REPO_NAME:\
+        \ ${'$'}RELEASE_REPO_NAME\"\n                echo \"RELEASE_VERSION_TYPE:\
+        \ ${'$'}RELEASE_VERSION_TYPE\"\n                echo \"IS_ERROR: ${'$'}IS_ERROR\"\
+        \n                \n                if [ \"${'$'}IS_ERROR\" == \"TRUE\" ];\
+        \ then\n                    echo \"IS_ERROR is TRUE, exiting with error code.\"\
+        \n                    exit 1\n                fi"
+      type: script
+    triggers: []
+    vcs: {}
+  - id: Caller
+    name: Caller
+    params:
+    - name: env.Echo_ID
+      type: param
+      value: Mockholm_Build
+    - name: env.TeamCitySchema
+      type: param
+      value: http
+    - name: env.RELEASE_REPO_NAME
+      type: select
+      value: repo1
+    - name: env.RELEASE_VERSION_TYPE
+      type: select
+      value: PATCH
+    - name: env.IS_ERROR
+      type: select
+      value: 'FALSE'
+    steps:
+    - enabled: false
+      id: simpleRunner
+      scriptContent: "echo \"userId: %system.teamcity.auth.userId%\"\n           \
+        \     echo \"url: %teamcity.serverUrl%/app/rest/buildQueue\"\n           \
+        \     curl -u \"%system.teamcity.auth.userId%:%system.teamcity.auth.password%\"\
+        \ -X POST \\\n                \"%teamcity.serverUrl%/app/rest/buildQueue\"\
+        \ \\\n                -H \"Content-Type: application/json\" \\\n         \
+        \       -d '{\n                  \"buildType\": {\n                    \"\
+        id\": \"%env.Echo_ID%\"\n                  },\n                  \"properties\"\
+        : {\n                    \"property\": [\n                      {\n      \
+        \                  \"name\": \"env.RELEASE_VERSION_TYPE\",\n             \
+        \           \"value\": \"%env.RELEASE_VERSION_TYPE%\"\n                  \
+        \    },\n                      {\n                        \"name\": \"env.RELEASE_REPO_NAME\"\
+        ,\n                        \"value\": \"%env.RELEASE_REPO_NAME%\"\n      \
+        \                },\n                      {\n                        \"name\"\
+        : \"env.IS_ERROR\",\n                        \"value\": \"%env.IS_ERROR%\"\
+        \n                      }\n                    ]\n                  }}'"
+      type: script
+    - enabled: false
+      id: caller
+      name: caller
+      scriptContent: "pnpm install\n                pnpm trigger-build --url \"%teamcity.serverUrl%\"\
+        \ --userId \"%system.teamcity.auth.userId%\" --password \"%system.teamcity.auth.password%\"\
+        \ --buildTypeId \"%env.Echo_ID%\" --properties \"RELEASE_VERSION_TYPE\"=\"\
+        %env.RELEASE_VERSION_TYPE%\" \"RELEASE_REPO_NAME\"=\"%env.RELEASE_REPO_NAME%\"\
+        \ \"IS_ERROR\"=\"%env.IS_ERROR%\""
+      type: script
+      workingDir: apps/node-client
+    - id: kotlinScript
+      type: kotlinScript
+    vcs:
+      root: HttpsGithubComKesi03cityClickersRefsHeadsMain
+  - features: []
+    id: Build_1
+    name: Build
+    steps:
+    - id: hello
+      name: hello
+      scriptContent: "#!/bin/bash\n                \n                echo \"Build\
+        \ called\"\n                echo \"RELEASE_REPO_NAME: %RELEASE_REPO_NAME%\"\
+        \n                echo \"RELEASE_VERSION_TYPE: %RELEASE_VERSION_TYPE%\"\n\
+        \                \n                if [ \"%IS_ERROR%\" == \"TRUE\" ]; then\n\
+        \                    echo \"IS_FALSE is TRUE, exiting with error code.\"\n\
+        \                    exit 1\n                fi"
+      type: script
+    triggers: []
+    vcs: {}
+  description: Mockholm Organisation
+  subProjects:
+  - buildTypes:
+    - artifactRules: "messagenext.txt\n        message.txt"
+      id: Jobs_Step2
+      name: step2
+      steps:
+      - type: script
+      - id: os
+        name: os
+        scriptContent: 'echo "OS: %teamcity.agent.jvm.os.name%'
+        type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: linux
+        name: linux
+        scriptContent: "echo \"step2\"\n                echo \"step1-message:${Jobs_Step1.depParamRefs[\"\
+          env.MESSAGE\"]}\"\n                echo \"step1-meddelande:${Jobs_Step1.depParamRefs[\"\
+          meddelande\"]}\"\n                echo \"##teamcity[setParameter name='env.MESSAGE'\
+          \ value='Hello from step2']\"\n                MESSAGE=${'$'}(cat message.txt)\n\
+          \                echo \"Received Message: ${'$'}MESSAGE\"\n            \
+          \    echo \"next message; ${'$'}MESSAGE\" > messagenext.txt"
+        type: script
+      - type: script
+      - id: os_version
+        name: os_version
+        type: python
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: windows
+        name: windows
+        scriptContent: "Write-Output \"step2\"\n                    Write-Output \"\
+          step1-message:${Jobs_Step1.depParamRefs[\"env.MESSAGE\"]}\"\n          \
+          \          Write-Output \"step1-meddelande:${Jobs_Step1.depParamRefs[\"\
+          meddelande\"]}\"\n                    Write-Output \"##teamcity[setParameter\
+          \ name='env.MESSAGE' value='Hello from step2']\"\n                    \n\
+          \                    ${'$'}MESSAGE = Get-Content message.txt\n         \
+          \           Write-Output \"Received Message: ${'$'}MESSAGE\"\n         \
+          \           ${'$'}MESSAGE | Out-File -Encoding utf8 messagenext.txt"
+        type: powershell
+      triggers: []
+    - artifactRules: "messagenext.txt\n        message.txt"
+      id: Jobs_Step31
+      name: step3_1
+      steps:
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: linux
+        name: linux
+        scriptContent: "echo \"step3\"\n                echo \"step2-message: ${Jobs_Step21.depParamRefs[\"\
+          env.MESSAGE\"]}\"\n                MESSAGE=${'$'}(cat messagenext.txt)\n\
+          \                echo \"Received Message: ${'$'}MESSAGE\""
+        type: script
+      - type: script
+      - id: os_version
+        name: os_version
+        type: python
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: windows
+        name: windows
+        scriptContent: "Write-Output \"step3\"\n                    Write-Output \"\
+          step21-message: ${Jobs_Step21.depParamRefs[\"env.MESSAGE\"]}\"\n       \
+          \             \n                    ${'$'}MESSAGE = Get-Content messagenext.txt\n\
+          \                    Write-Output \"Received Message: ${'$'}MESSAGE\""
+        type: powershell
+      triggers: []
+    - artifactRules: "messagenext.txt\n        message.txt"
+      id: Jobs_Step21
+      name: step2_1
+      params:
+      - name: env.MESSAGE
+        type: param
+        value: default
+      steps:
+      - type: script
+      - id: os
+        name: os
+        scriptContent: 'echo "OS: %teamcity.agent.jvm.os.name%'
+        type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: linux
+        name: linux
+        scriptContent: "echo \"step2\"\n                echo \"step1-message:${Jobs_Step1.depParamRefs[\"\
+          env.MESSAGE\"]}\"\n                echo \"##teamcity[setParameter name='env.MESSAGE'\
+          \ value='Hello from step2']\"\n                MESSAGE=${'$'}(cat message.txt)\n\
+          \                echo \"Received Message: ${'$'}MESSAGE\"\n            \
+          \    echo \"next message; ${'$'}MESSAGE\" > messagenext.txt"
+        type: script
+      - type: script
+      - id: os_version
+        name: os_version
+        type: python
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: windows
+        name: windows
+        scriptContent: "Write-Output \"step2_1\"\n                    Write-Output\
+          \ \"step1-message:${Jobs_Step1.depParamRefs[\"env.MESSAGE\"]}\"\n      \
+          \              Write-Output \"step1-meddelande:${Jobs_Step1.depParamRefs[\"\
+          meddelande\"]}\"\n                    Write-Output \"##teamcity[setParameter\
+          \ name='env.MESSAGE' value='Hello from step2_1']\"\n                   \
+          \ ${'$'}MESSAGE = Get-Content message.txt\n                    Write-Output\
+          \ \"Received Message: ${'$'}MESSAGE\"\n                    ${'$'}MESSAGE\
+          \ | Out-File -Encoding utf8 messagenext.txt"
+        type: powershell
+      triggers: []
+    - artifactRules: "messagenext.txt\n        message.txt"
+      id: Jobs_Step3
+      name: step3
+      params:
+      - name: env.MESSSAGE
+        type: param
+        value: default
+      steps:
+      - type: script
+      - id: linux
+        name: linux
+        scriptContent: "echo \"step3\"\n                echo \"step2-message: ${Jobs_Step2.depParamRefs[\"\
+          env.MESSAGE\"]}\"\n                MESSAGE=${'$'}(cat messagenext.txt)\n\
+          \                echo \"Received Message: ${'$'}MESSAGE\""
+        type: script
+      - type: script
+      - id: os_version
+        name: os_version
+        type: python
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: windows
+        name: windows
+        scriptContent: "Write-Output \"step3\"\n                    Write-Output \"\
+          step2-message: ${Jobs_Step2.depParamRefs[\"env.MESSAGE\"]}\"\n         \
+          \           \n                    ${'$'}MESSAGE = Get-Content messagenext.txt\n\
+          \                    Write-Output \"Received Message: ${'$'}MESSAGE\""
+        type: powershell
+      triggers: []
+    - id: Jobs_Step1
+      name: step1
+      params:
+      - name: env.message
+        type: param
+        value: default
+      - name: meddelande
+        type: param
+        value: standard
+      steps:
+      - type: script
+      - id: hello
+        name: hello
+        scriptContent: "echo \"step1\"\n                MESSAGE=\"Hello from Step1\"\
+          \n                echo \"##teamcity[setParameter name='env.MESSAGE' value='${'$'}MESSAGE']\"\
+          \n                echo \"My custom message\" > message.txt"
+        type: script
+      - id: os_version
+        name: os_version
+        type: python
+    - id: Jobs_Step4
+      name: step4
+      steps:
+      - id: simpleRunner
+        scriptContent: echo "step4
+        type: script
+      triggers: []
+    id: Jobs
+    name: jobs
+  - id: Versionify
+    name: versionify
+    subProjects:
+    - buildTypes:
+      - features: []
+        id: Versionify_Fix_Finish
+        name: finish
+        params:
+        - name: env.RELEASE_TYPE
+          type: param
+          value: '%RELEASE_TYPE%'
+        - name: RELEASE_TYPE
+          type: select
+          value: PATCH
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      - features: []
+        id: Versionify_Fix_Start
+        name: start
+        params:
+        - name: env.RELEASE_TYPE
+          type: param
+          value: '%RELEASE_TYPE%'
+        - name: RELEASE_TYPE
+          type: select
+          value: PATCH
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        - id: release_version
+          name: release_version
+          scriptContent: "BRANCH_NAME=${'$'}(git rev-parse --abbrev-ref HEAD)\n  \
+            \              echo \"##teamcity[setParameter name='RELEASE_BRANCH' value='${'$'}BRANCH_NAME']\"\
+            \n                \n                BRANCH_PREFIX=${'$'}(echo \"${'$'}BRANCH_NAME\"\
+            \ | cut -d'/' -f1)\n                echo \"##teamcity[setParameter name='BRANCH_PREFIX'\
+            \ value='${'$'}BRANCH_PREFIX']\"\n                \n                RELEASE_VERSION=${'$'}(echo\
+            \ \"${'$'}BRANCH_NAME\" | cut -d'/' -f2)\n                echo \"##teamcity[setParameter\
+            \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      id: Versionify_Fix
+      name: fix
+    - buildTypes:
+      - features: []
+        id: Versionify_Build
+        name: start
+        params:
+        - name: env.RELEASE_TYPE
+          type: param
+          value: '%RELEASE_TYPE%'
+        - name: RELEASE_TYPE
+          type: select
+          value: PATCH
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        - id: release_version
+          name: release_version
+          scriptContent: "BRANCH_NAME=${'$'}(git rev-parse --abbrev-ref HEAD)\n  \
+            \              echo \"##teamcity[setParameter name='RELEASE_BRANCH' value='${'$'}BRANCH_NAME']\"\
+            \n                \n                BRANCH_PREFIX=${'$'}(echo \"${'$'}BRANCH_NAME\"\
+            \ | cut -d'/' -f1)\n                echo \"##teamcity[setParameter name='BRANCH_PREFIX'\
+            \ value='${'$'}BRANCH_PREFIX']\"\n                \n                RELEASE_VERSION=${'$'}(echo\
+            \ \"${'$'}BRANCH_NAME\" | cut -d'/' -f2)\n                echo \"##teamcity[setParameter\
+            \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      - features: []
+        id: Versionify_FinishRelease
+        name: finish
+        params:
+        - name: env.RELEASE_TYPE
+          type: param
+          value: '%RELEASE_TYPE%'
+        - name: RELEASE_TYPE
+          type: select
+          value: PATCH
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      id: Versionify_Release
+      name: release
+    - buildTypes:
+      - features: []
+        id: Versionify_FinishFeature
+        name: finish
+        params:
+        - name: RELEASE_TYPE
+          type: param
+          value: FEATURE
+        - name: FEATURE_NAME
+          type: text
+          value: JIRA-122222
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      - features: []
+        id: Versionify_StartFeature
+        name: start
+        params:
+        - name: RELEASE_TYPE
+          type: param
+          value: FEATURE
+        - name: FEATURE_NAME
+          type: text
+          value: JIRA-122222
+        steps:
+        - id: git_config
+          name: git config
+          scriptContent: "git config --global user.email \"68278724+kesi03@users.noreply.github.com\"\
+            \n                git config --global user.name \"kesi03\""
+          type: script
+        triggers: []
+        vcs:
+          root: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      id: Versionify_Feature
+      name: feature
+    vcsRoots:
+    - branch: refs/heads/develop
+      id: Versionify_HttpsGithubComKesi03versionifyRefsHeadsMaster
+      name: https://github.com/kesi03/versionify#refs/heads/master
+      url: https://github.com/kesi03/versionify
+  - buildTypes:
+    - id: Build_PackgeApp1
+      name: packge_app_1
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: initDotEnv
+        name: initDotEnv
+        scriptContent: "export ${'$'}(grep -v '^#' .env | xargs) \n              \
+          \  echo ${'$'}ALLOW_GLOBAL_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_GLOBAL_BUILD' value='${'$'}ALLOW_GLOBAL_BUILD']\" \n     \
+          \           echo ${'$'}ALLOW_PACKAGE_BUILD \n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_PACKAGE_BUILD' value='${'$'}ALLOW_PACKAGE_BUILD']\" \n   \
+          \             echo ${'$'}ALLOW_ASSEMBLY_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_ASSEMBLY_BUILD' value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n  \
+          \              echo ${'$'}GLOBAL_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='GLOBAL_BUILD_NAMES' value='${'$'}GLOBAL_BUILD_NAMES']\"\n      \
+          \          echo ${'$'}PACKAGE_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='PACKAGE_BUILD_NAMES' value='${'$'}PACKAGE_BUILD_NAMES']\"\n    \
+          \            echo ${'$'}RELEASE_VERSION\n                echo \"##teamcity[setParameter\
+          \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\"\n            \
+          \    echo ${'$'}RFC\n                echo \"##teamcity[setParameter name='RFC'\
+          \ value='${'$'}RFC']\"\n                cp .env package_app_1.env"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: initDotEnvWindows
+        name: initDotEnvWindows
+        scriptContent: "# Load environment variables from .env file\n            \
+          \        Get-Content .env | Where-Object {${'$'}_ -notmatch '^#'} | ForEach-Object\
+          \ {\n                        ${'$'}name, ${'$'}value = ${'$'}_ -split '=',\
+          \ 2\n                        [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                    }\n            \
+          \        \n                    # Retrieve and print variables\n        \
+          \            ${'$'}ALLOW_GLOBAL_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_GLOBAL_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_GLOBAL_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_GLOBAL_BUILD'\
+          \ value='${'$'}ALLOW_GLOBAL_BUILD']\"\n                    \n          \
+          \          ${'$'}ALLOW_PACKAGE_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_PACKAGE_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_PACKAGE_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_PACKAGE_BUILD'\
+          \ value='${'$'}ALLOW_PACKAGE_BUILD']\"\n                    \n         \
+          \           ${'$'}ALLOW_ASSEMBLY_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_ASSEMBLY_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_ASSEMBLY_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD'\
+          \ value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n                    \n        \
+          \            ${'$'}GLOBAL_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          GLOBAL_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}GLOBAL_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='GLOBAL_BUILD_NAMES'\
+          \ value='${'$'}GLOBAL_BUILD_NAMES']\"\n                    \n          \
+          \          ${'$'}PACKAGE_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          PACKAGE_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}PACKAGE_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='PACKAGE_BUILD_NAMES'\
+          \ value='${'$'}PACKAGE_BUILD_NAMES']\"\n                    \n         \
+          \           ${'$'}RELEASE_VERSION = [System.Environment]::GetEnvironmentVariable(\"\
+          RELEASE_VERSION\", \"Process\")\n                    Write-Output ${'$'}RELEASE_VERSION\n\
+          \                    Write-Output \"##teamcity[setParameter name='RELEASE_VERSION'\
+          \ value='${'$'}RELEASE_VERSION']\"\n                    \n             \
+          \       ${'$'}RFC = [System.Environment]::GetEnvironmentVariable(\"RFC\"\
+          , \"Process\")\n                    Write-Output ${'$'}RFC\n           \
+          \         Write-Output \"##teamcity[setParameter name='RFC' value='${'$'}RFC']\"\
+          \n                    \n                    Copy-Item -Path .env -Destination\
+          \ package_app_1.env\n                    if (Test-Path package_app_1.env)\
+          \ {\n                        Write-Output \"File copied successfully!\"\n\
+          \                    } else {\n                        Write-Output \"File\
+          \ copy failed!\"\n                    }"
+        type: powershell
+      triggers: []
+    - id: Build_PackgeApp2
+      name: packge_app_2
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: initDotEnv
+        name: initDotEnv
+        scriptContent: "export ${'$'}(grep -v '^#' .env | xargs) \n              \
+          \  echo ${'$'}ALLOW_GLOBAL_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_GLOBAL_BUILD' value='${'$'}ALLOW_GLOBAL_BUILD']\" \n     \
+          \           echo ${'$'}ALLOW_PACKAGE_BUILD \n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_PACKAGE_BUILD' value='${'$'}ALLOW_PACKAGE_BUILD']\" \n   \
+          \             echo ${'$'}ALLOW_ASSEMBLY_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_ASSEMBLY_BUILD' value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n  \
+          \              echo ${'$'}GLOBAL_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='GLOBAL_BUILD_NAMES' value='${'$'}GLOBAL_BUILD_NAMES']\"\n      \
+          \          echo ${'$'}PACKAGE_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='PACKAGE_BUILD_NAMES' value='${'$'}PACKAGE_BUILD_NAMES']\"\n    \
+          \            echo ${'$'}RELEASE_VERSION\n                echo \"##teamcity[setParameter\
+          \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\"\n            \
+          \    echo ${'$'}RFC\n                echo \"##teamcity[setParameter name='RFC'\
+          \ value='${'$'}RFC']\"\n                cp .env package_app_2.env"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: initDotEnvWindows
+        name: initDotEnvWindows
+        scriptContent: "# Load environment variables from .env file\n            \
+          \        Get-Content .env | Where-Object {${'$'}_ -notmatch '^#'} | ForEach-Object\
+          \ {\n                        ${'$'}name, ${'$'}value = ${'$'}_ -split '=',\
+          \ 2\n                        [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                    }\n            \
+          \        \n                    # Retrieve and print variables\n        \
+          \            ${'$'}ALLOW_GLOBAL_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_GLOBAL_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_GLOBAL_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_GLOBAL_BUILD'\
+          \ value='${'$'}ALLOW_GLOBAL_BUILD']\"\n                    \n          \
+          \          ${'$'}ALLOW_PACKAGE_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_PACKAGE_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_PACKAGE_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_PACKAGE_BUILD'\
+          \ value='${'$'}ALLOW_PACKAGE_BUILD']\"\n                    \n         \
+          \           ${'$'}ALLOW_ASSEMBLY_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_ASSEMBLY_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_ASSEMBLY_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD'\
+          \ value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n                    \n        \
+          \            ${'$'}GLOBAL_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          GLOBAL_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}GLOBAL_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='GLOBAL_BUILD_NAMES'\
+          \ value='${'$'}GLOBAL_BUILD_NAMES']\"\n                    \n          \
+          \          ${'$'}PACKAGE_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          PACKAGE_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}PACKAGE_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='PACKAGE_BUILD_NAMES'\
+          \ value='${'$'}PACKAGE_BUILD_NAMES']\"\n                    \n         \
+          \           ${'$'}RELEASE_VERSION = [System.Environment]::GetEnvironmentVariable(\"\
+          RELEASE_VERSION\", \"Process\")\n                    Write-Output ${'$'}RELEASE_VERSION\n\
+          \                    Write-Output \"##teamcity[setParameter name='RELEASE_VERSION'\
+          \ value='${'$'}RELEASE_VERSION']\"\n                    \n             \
+          \       ${'$'}RFC = [System.Environment]::GetEnvironmentVariable(\"RFC\"\
+          , \"Process\")\n                    Write-Output ${'$'}RFC\n           \
+          \         Write-Output \"##teamcity[setParameter name='RFC' value='${'$'}RFC']\"\
+          \n                    \n                    Copy-Item -Path .env -Destination\
+          \ package_app_2.env\n                    if (Test-Path package_app_2.env)\
+          \ {\n                        Write-Output \"File copied successfully!\"\n\
+          \                    } else {\n                        Write-Output \"File\
+          \ copy failed!\"\n                    }"
+        type: powershell
+      triggers: []
+    - artifactRules: "package_app_1.env\n                    package_app_2.env"
+      id: Build_Assembly
+      name: assembly
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      - name: GLOBAL_BUILD_NAMES
+        type: select
+        value: global_common,global_other
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: useOrCreateDotEnv
+        name: useOrCreateDotEnv
+        scriptContent: "env_file=\".env\"\n                \n                if [[\
+          \ -f \"${'$'}env_file\" ]]; then\n                    # Load variables from\
+          \ .env\n                    export ${'$'}(grep -v '^#' \"${'$'}env_file\"\
+          \ | xargs)\n                else\n                    # Define default values\n\
+          \                    values=(\n                    \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\"\
+          \n                    \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\"\n  \
+          \                  \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\n   \
+          \                 \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n       \
+          \             \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n         \
+          \           \"RELEASE_VERSION=%RELEASE_VERSION%\",\n                   \
+          \ \"RFC=%RFC%\"\n                    )\n                \n             \
+          \       # Create .env and add variables only if not already present\n  \
+          \                  touch \"${'$'}env_file\"\n                    for line\
+          \ in \"${'$'}{values[@]}\"; do\n                        grep -qxF \"${'$'}line\"\
+          \ \"${'$'}env_file\" || echo \"${'$'}line\" >> \"${'$'}env_file\"\n    \
+          \                done\n                fi\n                if [[ ${'$'}ALLOW_ASSEMBLY_BUILD\
+          \ == \"true\" ]]; then\n                    echo \"ALLOW_PACKAGE_BUILD is\
+          \ enabled, continuing...\"\n                else\n                    echo\
+          \ \"ALLOW_PACKAGE_BUILD is not enabled, exiting...\"\n                 \
+          \   # exit 1\n                fi"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: useOrCreateDotEnvWindows
+        name: useOrCreateDotEnvWindows
+        scriptContent: "${'$'}envFile = \".env\"\n                    \n         \
+          \           # Define the variables\n                    ${'$'}values = @(\n\
+          \                        \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\",\n\
+          \                        \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\",\n\
+          \                        \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\
+          ,\n                        \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n\
+          \                        \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n\
+          \                        \"RELEASE_VERSION=%RELEASE_VERSION%\",\n      \
+          \                  \"RFC=%RFC%\"\n                    )\n              \
+          \      \n                    # Read existing content\n                 \
+          \   ${'$'}existingContent = @()\n                    if (Test-Path ${'$'}envFile)\
+          \ {\n                        ${'$'}existingContent = Get-Content ${'$'}envFile\n\
+          \                        # Load variables from .env\n                  \
+          \      Get-Content ${'$'}envFile | Where-Object {${'$'}_ -notmatch '^#'}\
+          \ | ForEach-Object {\n                            ${'$'}name, ${'$'}value\
+          \ = ${'$'}_ -split '=', 2\n                            [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                        }\n        \
+          \            }\n                    \n                    # Append only\
+          \ if the entry does not exist\n                    foreach (${'$'}line in\
+          \ ${'$'}values) {\n                        if (-not (${'$'}existingContent\
+          \ -contains ${'$'}line)) {\n                            Add-Content -Path\
+          \ ${'$'}envFile -Value ${'$'}line\n                        }\n         \
+          \           }\n                    \n                    # Pass variables\
+          \ to TeamCity\n                    ${'$'}envVars = @(\"ALLOW_GLOBAL_BUILD\"\
+          , \"ALLOW_PACKAGE_BUILD\", \"ALLOW_ASSEMBLY_BUILD\", \"GLOBAL_BUILD_NAMES\"\
+          , \"PACKAGE_BUILD_NAMES\", \"RELEASE_VERSION\", \"RFC\")\n             \
+          \       \n                    foreach (${'$'}var in ${'$'}envVars) {\n \
+          \                       ${'$'}value = [System.Environment]::GetEnvironmentVariable(${'$'}var,\
+          \ \"Process\")\n                        if (${'$'}value) {\n           \
+          \                 Write-Output \"##teamcity[setParameter name='${'$'}var'\
+          \ value='${'$'}value']\"\n                        }\n                  \
+          \  }\n                    \n                    Write-Output ${'$'}env:ALLOW_PACKAGE_BUILD\n\
+          \                    if (${'$'}env:ALLOW_PACKAGE_BUILD -eq \"true\") {\n\
+          \                        Write-Output \"ALLOW_ASSEMBLY_BUILD is enabled,\
+          \ continuing...\"\n                    } else {\n                      \
+          \  Write-Output \"ALLOW_ASSEMBLY_BUILD is not enabled, exiting...\"\n  \
+          \                      # exit 1\n                    }"
+        type: powershell
+      triggers: []
+    - artifactRules: "global_common.env\n        global_other.env"
+      id: Build_ResultGlobal
+      name: result_global
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: exitDotEnv
+        name: exitDotEnv
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: exitDotEnvWindows
+        name: exitDotEnvWindows
+        type: powershell
+      triggers: []
+      vcs: {}
+    - id: Build_ResultAssembly
+      name: result_assembly
+      params:
+      - name: ASSEMBLY_GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Assembly.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: exitDotEnv
+        name: exitDotEnv
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: exitDotEnvWindows
+        name: exitDotEnvWindows
+        type: powershell
+      triggers: []
+      vcs: {}
+    - id: Build_GlobalCommon
+      name: global_common
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: initDotEnv
+        name: initDotEnv
+        scriptContent: "export ${'$'}(grep -v '^#' .env | xargs) \n              \
+          \  echo ${'$'}ALLOW_GLOBAL_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_GLOBAL_BUILD' value='${'$'}ALLOW_GLOBAL_BUILD']\" \n     \
+          \           echo ${'$'}ALLOW_PACKAGE_BUILD \n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_PACKAGE_BUILD' value='${'$'}ALLOW_PACKAGE_BUILD']\" \n   \
+          \             echo ${'$'}ALLOW_ASSEMBLY_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_ASSEMBLY_BUILD' value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n  \
+          \              echo ${'$'}GLOBAL_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='GLOBAL_BUILD_NAMES' value='${'$'}GLOBAL_BUILD_NAMES']\"\n      \
+          \          echo ${'$'}RELEASE_VERSION\n                echo \"##teamcity[setParameter\
+          \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\"\n            \
+          \    echo ${'$'}RFC\n                echo \"##teamcity[setParameter name='RFC'\
+          \ value='${'$'}RFC']\"\n                cp .env global_common.env"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: initDotEnvWindows
+        name: initDotEnvWindows
+        scriptContent: "# Load environment variables from .env file\n            \
+          \        Get-Content .env | Where-Object {${'$'}_ -notmatch '^#'} | ForEach-Object\
+          \ {\n                        ${'$'}name, ${'$'}value = ${'$'}_ -split '=',\
+          \ 2\n                        [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                    }\n            \
+          \        \n                    # Retrieve and print variables\n        \
+          \            ${'$'}ALLOW_GLOBAL_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_GLOBAL_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_GLOBAL_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_GLOBAL_BUILD'\
+          \ value='${'$'}ALLOW_GLOBAL_BUILD']\"\n                    \n          \
+          \          ${'$'}ALLOW_PACKAGE_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_PACKAGE_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_PACKAGE_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_PACKAGE_BUILD'\
+          \ value='${'$'}ALLOW_PACKAGE_BUILD']\"\n                    \n         \
+          \           ${'$'}ALLOW_ASSEMBLY_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_ASSEMBLY_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_ASSEMBLY_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD'\
+          \ value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n                    \n        \
+          \            ${'$'}GLOBAL_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          GLOBAL_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}GLOBAL_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='GLOBAL_BUILD_NAMES'\
+          \ value='${'$'}GLOBAL_BUILD_NAMES']\"\n                    \n          \
+          \          ${'$'}RELEASE_VERSION = [System.Environment]::GetEnvironmentVariable(\"\
+          RELEASE_VERSION\", \"Process\")\n                    Write-Output ${'$'}RELEASE_VERSION\n\
+          \                    Write-Output \"##teamcity[setParameter name='RELEASE_VERSION'\
+          \ value='${'$'}RELEASE_VERSION']\"\n                    \n             \
+          \       ${'$'}RFC = [System.Environment]::GetEnvironmentVariable(\"RFC\"\
+          , \"Process\")\n                    Write-Output ${'$'}RFC\n           \
+          \         Write-Output \"##teamcity[setParameter name='RFC' value='${'$'}RFC']\"\
+          \n                    \n                    Copy-Item -Path .env -Destination\
+          \ global_common.env\n                    if (Test-Path global_common.env)\
+          \ {\n                        Write-Output \"File copied successfully!\"\n\
+          \                    } else {\n                        Write-Output \"File\
+          \ copy failed!\"\n                    }"
+        type: powershell
+      triggers: []
+    - id: Build_AssemblyApp1
+      name: assembly_app_1
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: initDotEnv
+        name: initDotEnv
+        scriptContent: "export ${'$'}(grep -v '^#' .env | xargs) \n              \
+          \  echo ${'$'}ALLOW_GLOBAL_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_GLOBAL_BUILD' value='${'$'}ALLOW_GLOBAL_BUILD']\" \n     \
+          \           echo ${'$'}ALLOW_PACKAGE_BUILD \n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_PACKAGE_BUILD' value='${'$'}ALLOW_PACKAGE_BUILD']\" \n   \
+          \             echo ${'$'}ALLOW_ASSEMBLY_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_ASSEMBLY_BUILD' value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n  \
+          \              echo ${'$'}GLOBAL_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='GLOBAL_BUILD_NAMES' value='${'$'}GLOBAL_BUILD_NAMES']\"\n      \
+          \          echo ${'$'}PACKAGE_BUILD_NAMES\n                echo \"##teamcity[setParameter\
+          \ name='PACKAGE_BUILD_NAMES' value='${'$'}PACKAGE_BUILD_NAMES']\"\n    \
+          \            echo ${'$'}RELEASE_VERSION\n                echo \"##teamcity[setParameter\
+          \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\"\n            \
+          \    echo ${'$'}RFC\n                echo \"##teamcity[setParameter name='RFC'\
+          \ value='${'$'}RFC']\"\n                cp .env assembly_app_1.env"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: initDotEnvWindows
+        name: initDotEnvWindows
+        scriptContent: "# Load environment variables from .env file\n            \
+          \        Get-Content .env | Where-Object {${'$'}_ -notmatch '^#'} | ForEach-Object\
+          \ {\n                        ${'$'}name, ${'$'}value = ${'$'}_ -split '=',\
+          \ 2\n                        [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                    }\n            \
+          \        \n                    # Retrieve and print variables\n        \
+          \            ${'$'}ALLOW_GLOBAL_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_GLOBAL_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_GLOBAL_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_GLOBAL_BUILD'\
+          \ value='${'$'}ALLOW_GLOBAL_BUILD']\"\n                    \n          \
+          \          ${'$'}ALLOW_PACKAGE_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_PACKAGE_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_PACKAGE_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_PACKAGE_BUILD'\
+          \ value='${'$'}ALLOW_PACKAGE_BUILD']\"\n                    \n         \
+          \           ${'$'}ALLOW_ASSEMBLY_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_ASSEMBLY_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_ASSEMBLY_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD'\
+          \ value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n                    \n        \
+          \            ${'$'}GLOBAL_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          GLOBAL_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}GLOBAL_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='GLOBAL_BUILD_NAMES'\
+          \ value='${'$'}GLOBAL_BUILD_NAMES']\"\n                    \n          \
+          \          ${'$'}PACKAGE_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          PACKAGE_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}PACKAGE_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='PACKAGE_BUILD_NAMES'\
+          \ value='${'$'}PACKAGE_BUILD_NAMES']\"\n                    \n         \
+          \           ${'$'}RELEASE_VERSION = [System.Environment]::GetEnvironmentVariable(\"\
+          RELEASE_VERSION\", \"Process\")\n                    Write-Output ${'$'}RELEASE_VERSION\n\
+          \                    Write-Output \"##teamcity[setParameter name='RELEASE_VERSION'\
+          \ value='${'$'}RELEASE_VERSION']\"\n                    \n             \
+          \       ${'$'}RFC = [System.Environment]::GetEnvironmentVariable(\"RFC\"\
+          , \"Process\")\n                    Write-Output ${'$'}RFC\n           \
+          \         Write-Output \"##teamcity[setParameter name='RFC' value='${'$'}RFC']\"\
+          \n                    \n                    Copy-Item -Path .env -Destination\
+          \ assembly_app_1.env\n                    if (Test-Path package_app_1.env)\
+          \ {\n                        Write-Output \"File copied successfully!\"\n\
+          \                    } else {\n                        Write-Output \"File\
+          \ copy failed!\"\n                    }"
+        type: powershell
+      triggers: []
+    - artifactRules: "package_app_1.env\n        package_app_2.env"
+      id: Build_ResultPackage
+      name: result_package
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: exitDotEnv
+        name: exitDotEnv
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: exitDotEnvWindows
+        name: exitDotEnvWindows
+        type: powershell
+      triggers: []
+      vcs: {}
+    - artifactRules: "global_common.env\n                    global_other.env"
+      id: Build_Packages
+      name: packages
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      - name: GLOBAL_BUILD_NAMES
+        type: select
+        value: global_common,global_other
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: useOrCreateDotEnv
+        name: useOrCreateDotEnv
+        scriptContent: "env_file=\".env\"\n                \n                if [[\
+          \ -f \"${'$'}env_file\" ]]; then\n                    # Load variables from\
+          \ .env\n                    export ${'$'}(grep -v '^#' \"${'$'}env_file\"\
+          \ | xargs)\n                else\n                    # Define default values\n\
+          \                    values=(\n                    \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\"\
+          \n                    \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\"\n  \
+          \                  \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\n   \
+          \                 \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n       \
+          \             \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n         \
+          \           \"RELEASE_VERSION=%RELEASE_VERSION%\",\n                   \
+          \ \"RFC=%RFC%\"\n                    )\n                \n             \
+          \       # Create .env and add variables only if not already present\n  \
+          \                  touch \"${'$'}env_file\"\n                    for line\
+          \ in \"${'$'}{values[@]}\"; do\n                        grep -qxF \"${'$'}line\"\
+          \ \"${'$'}env_file\" || echo \"${'$'}line\" >> \"${'$'}env_file\"\n    \
+          \                done\n                fi"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: useOrCreateDotEnvWindows
+        name: useOrCreateDotEnvWindows
+        scriptContent: "${'$'}envFile = \".env\"\n                    \n         \
+          \           # Define the variables\n                    ${'$'}values = @(\n\
+          \                        \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\",\n\
+          \                        \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\",\n\
+          \                        \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\
+          ,\n                        \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n\
+          \                        \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n\
+          \                        \"RELEASE_VERSION=%RELEASE_VERSION%\",\n      \
+          \                  \"RFC=%RFC%\"\n                    )\n              \
+          \      \n                    # Read existing content\n                 \
+          \   ${'$'}existingContent = @()\n                    if (Test-Path ${'$'}envFile)\
+          \ {\n                        ${'$'}existingContent = Get-Content ${'$'}envFile\n\
+          \                    }\n                    \n                    # Append\
+          \ only if the entry does not exist\n                    foreach (${'$'}line\
+          \ in ${'$'}values) {\n                        if (-not (${'$'}existingContent\
+          \ -contains ${'$'}line)) {\n                            Add-Content -Path\
+          \ ${'$'}envFile -Value ${'$'}line\n                        }\n         \
+          \           }"
+        type: powershell
+      triggers: []
+    - features: []
+      id: Build_Global
+      name: global
+      params:
+      - name: GLOBAL_BUILD_NAMES
+        type: select
+        value: global_common,global_other
+      - name: PACKAGE_BUILD_NAMES
+        type: select
+        value: package_app_1,package_app_2
+      - name: ALLOW_GLOBAL_BUILD
+        type: checkbox
+        value: 'false'
+      - name: ALLOW_ASSEMBLY_BUILD
+        type: checkbox
+        value: 'false'
+      - name: ALLOW_PACKAGE_BUILD
+        type: checkbox
+        value: 'false'
+      - name: RELEASE_VERSION
+        type: text
+        value: 1.0.0-RC
+      - name: RFC
+        type: text
+        value: '123456789'
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: createDotEnv
+        name: createDotEnv
+        scriptContent: "env_file=\".env\"\n                \n                # Define\
+          \ the variables\n                values=(\n                    \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\"\
+          \n                    \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\"\n  \
+          \                  \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\n   \
+          \                 \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\"\n        \
+          \            \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n          \
+          \          \"RELEASE_VERSION=%RELEASE_VERSION%\",\n                    \"\
+          RFC=%RFC%\"\n                )\n                \n                # Create\
+          \ .env if it doesn't exist\n                touch \"${'$'}env_file\"\n \
+          \               \n                # Append only if the entry does not exist\n\
+          \                for line in \"${'$'}{values[@]}\"; do\n               \
+          \     grep -qxF \"${'$'}line\" \"${'$'}env_file\" || echo \"${'$'}line\"\
+          \ >> \"${'$'}env_file\"\n                done"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: createDotEnvWindows
+        name: createDotEnvWindows
+        scriptContent: "${'$'}envFile = \".env\"\n                    \n         \
+          \           # Define the variables\n                    ${'$'}values = @(\n\
+          \                        \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\",\n\
+          \                        \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\",\n\
+          \                        \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\
+          ,\n                        \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n\
+          \                        \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n\
+          \                        \"RELEASE_VERSION=%RELEASE_VERSION%\",\n      \
+          \                  \"RFC=%RFC%\"\n                    )\n              \
+          \      \n                    # Read existing content\n                 \
+          \   ${'$'}existingContent = @()\n                    if (Test-Path ${'$'}envFile)\
+          \ {\n                        ${'$'}existingContent = Get-Content ${'$'}envFile\n\
+          \                    }\n                    \n                    # Append\
+          \ only if the entry does not exist\n                    foreach (${'$'}line\
+          \ in ${'$'}values) {\n                        if (-not (${'$'}existingContent\
+          \ -contains ${'$'}line)) {\n                            Add-Content -Path\
+          \ ${'$'}envFile -Value ${'$'}line\n                        }\n         \
+          \           }"
+        type: powershell
+    - id: Build_GlobalOther
+      name: global_other
+      params:
+      - name: GLOBAL_RELEASE_VERSION
+        type: param
+        value: ${Build_Global.depParamRefs[
+      steps:
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: equals
+          value: Linux
+        id: initDotEnv
+        name: initDotEnv
+        scriptContent: "export ${'$'}(grep -v '^#' .env | xargs) \n              \
+          \  echo ${'$'}ALLOW_GLOBAL_BUILD\n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_GLOBAL_BUILD' value='${'$'}ALLOW_GLOBAL_BUILD']\" \n     \
+          \           echo ${'$'}ALLOW_PACKAGE_BUILD \n                echo \"##teamcity[setParameter\
+          \ name='ALLOW_PACKAGE_BUILD' value='${'$'}ALLOW_PACKAGE_BUILD']\" \n   \
+          \             echo ${'$'}ALLOW_ASSEMBLY_BUILD \n                echo \"\
+          ##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD' value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\
+          \n                echo ${'$'}GLOBAL_BUILD_NAMES\n                echo \"\
+          ##teamcity[setParameter name='GLOBAL_BUILD_NAMES' value='${'$'}GLOBAL_BUILD_NAMES']\"\
+          \n                echo ${'$'}RELEASE_VERSION\n                echo \"##teamcity[setParameter\
+          \ name='RELEASE_VERSION' value='${'$'}RELEASE_VERSION']\"\n            \
+          \    echo ${'$'}RFC\n                echo \"##teamcity[setParameter name='RFC'\
+          \ value='${'$'}RFC']\"\n                cp .env global_other.env"
+        type: script
+      - type: script
+      - conditions:
+        - property: teamcity.agent.jvm.os.name
+          type: contains
+          value: Windows
+        id: initDotEnvWindows
+        name: initDotEnvWindows
+        scriptContent: "# Load environment variables from .env file\n            \
+          \        Get-Content .env | Where-Object {${'$'}_ -notmatch '^#'} | ForEach-Object\
+          \ {\n                        ${'$'}name, ${'$'}value = ${'$'}_ -split '=',\
+          \ 2\n                        [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+          \ ${'$'}value.Trim(), \"Process\")\n                    }\n            \
+          \        \n                    # Retrieve and print variables\n        \
+          \            ${'$'}ALLOW_GLOBAL_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_GLOBAL_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_GLOBAL_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_GLOBAL_BUILD'\
+          \ value='${'$'}ALLOW_GLOBAL_BUILD']\"\n                    \n          \
+          \          ${'$'}ALLOW_PACKAGE_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_PACKAGE_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_PACKAGE_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_PACKAGE_BUILD'\
+          \ value='${'$'}ALLOW_PACKAGE_BUILD']\"\n                    \n         \
+          \           ${'$'}ALLOW_ASSEMBLY_BUILD = [System.Environment]::GetEnvironmentVariable(\"\
+          ALLOW_ASSEMBLY_BUILD\", \"Process\")\n                    Write-Output ${'$'}ALLOW_ASSEMBLY_BUILD\n\
+          \                    Write-Output \"##teamcity[setParameter name='ALLOW_ASSEMBLY_BUILD'\
+          \ value='${'$'}ALLOW_ASSEMBLY_BUILD']\"\n                    \n        \
+          \            ${'$'}GLOBAL_BUILD_NAMES = [System.Environment]::GetEnvironmentVariable(\"\
+          GLOBAL_BUILD_NAMES\", \"Process\")\n                    Write-Output ${'$'}GLOBAL_BUILD_NAMES\n\
+          \                    Write-Output \"##teamcity[setParameter name='GLOBAL_BUILD_NAMES'\
+          \ value='${'$'}GLOBAL_BUILD_NAMES']\"\n                    \n          \
+          \          ${'$'}RELEASE_VERSION = [System.Environment]::GetEnvironmentVariable(\"\
+          RELEASE_VERSION\", \"Process\")\n                    Write-Output ${'$'}RELEASE_VERSION\n\
+          \                    Write-Output \"##teamcity[setParameter name='RELEASE_VERSION'\
+          \ value='${'$'}RELEASE_VERSION']\"\n                    \n             \
+          \       ${'$'}RFC = [System.Environment]::GetEnvironmentVariable(\"RFC\"\
+          , \"Process\")\n                    Write-Output ${'$'}RFC\n           \
+          \         Write-Output \"##teamcity[setParameter name='RFC' value='${'$'}RFC']\"\
+          \n                    \n                    Copy-Item -Path .env -Destination\
+          \ global_other.env\n                    if (Test-Path global_other.env)\
+          \ {\n                        Write-Output \"File copied successfully!\"\n\
+          \                    } else {\n                        Write-Output \"File\
+          \ copy failed!\"\n                    }"
+        type: powershell
+      triggers: []
+    id: Build
+    name: build
+    subProjects:
+    - buildTypes:
+      - id: Build_Deploy_Deployment
+        name: deployment
+      - features: []
+        id: Build_Deploy_Deploy
+        name: deploy
+        params:
+        - name: DEPLOYMENT_BUILD_NAMES
+          type: select
+          value: deployment_1
+        - name: GLOBAL_BUILD_NAMES
+          type: select
+          value: global_common,global_other
+        - name: DEPLOYMENT_ENVIRONMENT
+          type: select
+          value: DEV
+        - name: PACKAGE_BUILD_NAMES
+          type: select
+          value: package_app_1,package_app_2
+        - name: ASSEMBLY_BUILD_NAMES
+          type: select
+          value: assembly_app_1
+        - name: DEPLOYMENT_ACTION
+          type: select
+          value: DEPLOYMENT,LOGS,SECRETS,CERTIFICATES
+        - name: ALLOW_GLOBAL_BUILD
+          type: checkbox
+          value: 'true'
+        - name: ALLOW_ASSEMBLY_BUILD
+          type: checkbox
+          value: 'true'
+        - name: ALLOW_PACKAGE_BUILD
+          type: checkbox
+          value: 'true'
+        - name: ALLOW_DEPLOYMENT
+          type: checkbox
+          value: 'true'
+        - name: RELEASE_VERSION
+          type: text
+          value: 1.0.0-RC
+        - name: RFC
+          type: text
+          value: '1234567890'
+        steps:
+        - conditions:
+          - property: teamcity.agent.jvm.os.name
+            type: equals
+            value: Linux
+          id: useOrCreateDotEnv
+          name: useOrCreateDotEnv
+          scriptContent: "env_file=\".env\"\n                \n                if\
+            \ [[ -f \"${'$'}env_file\" ]]; then\n                    # Load variables\
+            \ from .env\n                    export ${'$'}(grep -v '^#' \"${'$'}env_file\"\
+            \ | xargs)\n                else\n                    # Define default\
+            \ values\n                    values=(\n                    \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\"\
+            \n                    \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\"\n\
+            \                    \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\",\n\
+            \                    \"ALLOW_DEPLOYMENT=%ALLOW_DEPLOYMENT%\",\n      \
+            \              \"DEPLOYMENT_ACTION=%DEPLOYMENT_ACTION%\",\n          \
+            \          \"DEPLOYMENT_BUILD_NAMES=%DEPLOYMENT_BUILD_NAMES%\",\n    \
+            \                \"DEPLOYMENT_ENVIRONMENT=%DEPLOYMENT_ENVIRONMENT%\",\n\
+            \                    \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\",\n  \
+            \                  \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\",\n  \
+            \                  \"RELEASE_VERSION=%RELEASE_VERSION%\",\n          \
+            \          \"RFC=%RFC%\"\n                    )\n                \n  \
+            \                  # Create .env and add variables only if not already\
+            \ present\n                    touch \"${'$'}env_file\"\n            \
+            \        for line in \"${'$'}{values[@]}\"; do\n                     \
+            \   grep -qxF \"${'$'}line\" \"${'$'}env_file\" || echo \"${'$'}line\"\
+            \ >> \"${'$'}env_file\"\n                    done\n                fi\n\
+            \                if [[ ${'$'}ALLOW_DEPLOYMENT == \"true\" ]]; then\n \
+            \                   echo \"ALLOW_DEPLOYMENT is enabled, continuing...\"\
+            \n                else\n                    echo \"ALLOW_DEPLOYMENT is\
+            \ not enabled, exiting...\"\n                    # exit 1\n          \
+            \      fi"
+          type: script
+        - type: script
+        - conditions:
+          - property: teamcity.agent.jvm.os.name
+            type: contains
+            value: Windows
+          id: useOrCreateDotEnvWindows
+          name: useOrCreateDotEnvWindows
+          scriptContent: "${'$'}envFile = \".env\"\n                    \n       \
+            \             # Define the variables\n                    ${'$'}values\
+            \ = @(\n                        \"ALLOW_GLOBAL_BUILD=%ALLOW_GLOBAL_BUILD%\"\
+            ,\n                        \"ALLOW_PACKAGE_BUILD=%ALLOW_PACKAGE_BUILD%\"\
+            ,\n                        \"ALLOW_ASSEMBLY_BUILD=%ALLOW_ASSEMBLY_BUILD%\"\
+            ,\n                        \"ALLOW_DEPLOYMENT=%ALLOW_DEPLOYMENT%\",\n\
+            \                        \"DEPLOYMENT_ACTION=%DEPLOYMENT_ACTION%\",\n\
+            \                        \"DEPLOYMENT_BUILD_NAMES=%DEPLOYMENT_BUILD_NAMES%\"\
+            ,\n                        \"DEPLOYMENT_ENVIRONMENT=%DEPLOYMENT_ENVIRONMENT%\"\
+            ,\n                        \"GLOBAL_BUILD_NAMES=%GLOBAL_BUILD_NAMES%\"\
+            ,\n                        \"PACKAGE_BUILD_NAMES=%PACKAGE_BUILD_NAMES%\"\
+            ,\n                        \"RELEASE_VERSION=%RELEASE_VERSION%\",\n  \
+            \                      \"RFC=%RFC%\"\n                    )\n        \
+            \            \n                    # Read existing content\n         \
+            \           ${'$'}existingContent = @()\n                    if (Test-Path\
+            \ ${'$'}envFile) {\n                        ${'$'}existingContent = Get-Content\
+            \ ${'$'}envFile\n                        # Load variables from .env\n\
+            \                        Get-Content ${'$'}envFile | Where-Object {${'$'}_\
+            \ -notmatch '^#'} | ForEach-Object {\n                            ${'$'}name,\
+            \ ${'$'}value = ${'$'}_ -split '=', 2\n                            [System.Environment]::SetEnvironmentVariable(${'$'}name.Trim(),\
+            \ ${'$'}value.Trim(), \"Process\")\n                        }\n      \
+            \              }\n                    \n                    # Append only\
+            \ if the entry does not exist\n                    foreach (${'$'}line\
+            \ in ${'$'}values) {\n                        if (-not (${'$'}existingContent\
+            \ -contains ${'$'}line)) {\n                            Add-Content -Path\
+            \ ${'$'}envFile -Value ${'$'}line\n                        }\n       \
+            \             }\n                    \n                    # Pass variables\
+            \ to TeamCity\n                    ${'$'}envVars = @(\"ALLOW_GLOBAL_BUILD\"\
+            , \"ALLOW_PACKAGE_BUILD\", \"ALLOW_ASSEMBLY_BUILD\", \"GLOBAL_BUILD_NAMES\"\
+            , \"PACKAGE_BUILD_NAMES\", \"RELEASE_VERSION\", \"RFC\")\n           \
+            \         \n                    foreach (${'$'}var in ${'$'}envVars) {\n\
+            \                        ${'$'}value = [System.Environment]::GetEnvironmentVariable(${'$'}var,\
+            \ \"Process\")\n                        if (${'$'}value) {\n         \
+            \                   Write-Output \"##teamcity[setParameter name='${'$'}var'\
+            \ value='${'$'}value']\"\n                        }\n                \
+            \    }\n                    \n                    Write-Output ${'$'}env:ALLOW_DEPLOYMENT\n\
+            \                    if (${'$'}env:ALLOW_DEPLOYMENT -eq \"true\") {\n\
+            \                        Write-Output \"ALLOW_DEPLOYMENT is enabled, continuing...\"\
+            \n                    } else {\n                        Write-Output \"\
+            ALLOW_DEPLOYMENT is not enabled, exiting...\"\n                      \
+            \  # exit 1\n                    }"
+          type: powershell
+        triggers: []
+      id: Build_Deploy
+      name: deploy
+  - buildTypes:
+    - features: []
+      id: Mutatio_MutatioPluginTest
+      name: Mutatio-plugin-test
+      params:
+      - name: env.REPO_IDENTITY
+        type: text
+        value: test
+      steps:
+      - enabled: false
+        id: add_github
+        name: add github
+        scriptContent: "nslookup github.com\n                ping github.com\n   \
+          \             ssh-keyscan github.com >> known_hosts"
+        type: script
+      triggers: []
+      vcs:
+        root: Mutatio_HttpsGithubComKesi03mutatioMavenRefsHeadsMaster
+    - features: []
+      id: Mutatio_Build
+      name: Build
+      steps: []
+      triggers: []
+      vcs:
+        root: Mutatio_HttpsGithubComKesi03mutatioMavenPluginRefsHeadsMaster
+    - features: []
+      id: Mutatio_CreateBranch
+      name: Create-Branch
+      params:
+      - name: BranchType
+        type: select
+        value: FEAT
+      - name: env.REPO_IDENTITY
+        type: text
+        value: test
+      steps:
+      - enabled: false
+        id: add_github
+        name: add github
+        scriptContent: "nslookup github.com\n                ping github.com\n   \
+          \             ssh-keyscan github.com >> known_hosts"
+        type: script
+      triggers: []
+      vcs:
+        root: Mutatio_HttpsGithubComKesi03mutatioMavenRefsHeadsMaster
+    id: Mutatio
+    name: mutatio
+    vcsRoots:
+    - branch: refs/heads/development
+      id: Mutatio_HttpsGithubComKesi03mutatioMavenRefsHeadsMaster
+      name: https://github.com/kesi03/mutatio-maven#refs/heads/development
+      url: https://github.com/kesi03/mutatio-maven
+    - branch: master
+      id: Mutatio_MutationMaven
+      name: mutation-maven
+      url: https://github.com/kesi03/mutatio-maven
+    - branch: refs/heads/master
+      id: Mutatio_HttpsGithubComKesi03mutatioMavenPluginRefsHeadsMaster
+      name: https://github.com/kesi03/mutatio-maven-plugin#refs/heads/master
+      url: https://github.com/kesi03/mutatio-maven-plugin
+  vcsRoots:
+  - branch: refs/heads/main
+    id: HttpsGithubComKesi03cityClickersRefsHeadsMain
+    name: https://github.com/kesi03/city-clickers#refs/heads/main
+    url: https://github.com/kesi03/city-clickers
+  - branch: refs/heads/main
+    id: HttpsGithubComKesi03cityClickersRefsHeadsMain1
+    name: https://github.com/kesi03/city-clickers#refs/heads/main (1)
+    url: https://github.com/kesi03/city-clickers
+version: '2025.03'
