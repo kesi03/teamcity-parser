@@ -34,7 +34,7 @@ project {
             id = "PROJECT_EXT_3"
             displayName = "GitHub.com"
             clientId = "Ov23liksAIfCxESzYhxb"
-            clientSecret = "credentialsJSON:1c82d6a1-279a-4e9a-b686-13226b9d2fe8"
+            clientSecret = "credentialsJSON:2df423ed-7eef-4a54-aeeb-9d301fbb64ea"
         }
     }
 }
