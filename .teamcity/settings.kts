@@ -1,4 +1,5 @@
 import jetbrains.buildServer.configs.kotlin.*
+import jetbrains.buildServer.configs.kotlin.projectFeatures.githubConnection
 
 /*
 The settings script is an entry point for defining a TeamCity
@@ -27,6 +28,15 @@ version = "2025.07"
 project {
 
     template(Chains)
+
+    features {
+        githubConnection {
+            id = "PROJECT_EXT_3"
+            displayName = "GitHub.com"
+            clientId = "Ov23liksAIfCxESzYhxb"
+            clientSecret = "credentialsJSON:1c82d6a1-279a-4e9a-b686-13226b9d2fe8"
+        }
+    }
 }
 
 object Chains : Template({
